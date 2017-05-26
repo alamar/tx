@@ -1,11 +1,15 @@
 package models;
 
 import play.libs.Json;
+
+import java.util.Collections;
+import java.util.Iterator;
+
 import play.libs.F.Either;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-public class ModelResult<T> {
+public class ModelResult<T> implements Iterable<T> {
     private final Either<T, Result> payload;
 
     private ModelResult(Either<T, Result> payload) {
@@ -26,5 +30,10 @@ public class ModelResult<T> {
                 : payload.right.get();
     }
 
-    
+    @Override
+    public Iterator<T> iterator() {
+        return payload.left.isPresent()
+                ? Collections.singleton(payload.left.get()).iterator()
+                : Collections.<T>emptyIterator();
+    }
 }

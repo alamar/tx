@@ -10,5 +10,10 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 # REST API
 GET     /users/:id                  controllers.UsersController.getUser(id: String)
-#GET     /users/:id                  controllers.UsersController.getUser(id: UUID)
 POST    /users                      controllers.UsersController.createUser
+
+GET     /users/:id/accs             controllers.AccountsController.getAccounts(id: String)
+POST    /users/:id/accs             controllers.AccountsController.createAccount(id: String)
+
+#GET     /users/:id/accs/:acc/txs    controllers.TransactionsController.getTransactions(id: String, acc: String)
+#POST    /users/:id/accs/:acc/txs    controllers.TransactionsController.createTransaction(id: String, acc: String)
