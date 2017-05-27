@@ -15,5 +15,5 @@ POST    /users                      controllers.UsersController.createUser
 GET     /users/:id/accs             controllers.AccountsController.getAccounts(id: String)
 POST    /users/:id/accs             controllers.AccountsController.createAccount(id: String)
 
-#GET     /users/:id/accs/:acc/txs    controllers.TransactionsController.getTransactions(id: String, acc: String)
-#POST    /users/:id/accs/:acc/txs    controllers.TransactionsController.createTransaction(id: String, acc: String)
+GET     /users/:id/accs/:acc/txs    controllers.TransactionsController.getTransactions(id: String, acc: String)
+POST    /users/:id/accs/:acc/txs    controllers.TransactionsController.createTransaction(id: String, acc: String)

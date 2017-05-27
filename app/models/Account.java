@@ -17,4 +17,14 @@ public class Account {
         this.created = created;
         this.balance = Balance.zero();
     }
+
+    public void withdraw(long amount) {
+        assert (amount >= balance.value);
+        this.balance = Balance.fromValue(balance.value - amount);
+    }
+
+    public void deposit(long amount) {
+        assert (amount > 0);
+        this.balance = Balance.fromValue(balance.value + amount);
+    }
 }

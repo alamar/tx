@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Singleton;
 
 import models.Account;
+import models.Transaction;
 import models.User;
 
 @Singleton
@@ -17,15 +18,16 @@ public class InMemoryDataStore implements DataStore {
     private final ConcurrentHashMap<String, User> usersByLogin = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, Account> accounts = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, List<Account>> accountsByUser = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, List<Transaction>> transactionsByAccount = new ConcurrentHashMap<>();
 
     @Override
-    public synchronized User addUser(User newUser) {
-        if (users.containsKey(newUser.id) || usersByLogin.containsKey(newUser.login)) {
+    public synchronized User addUser(User user) {
+        if (users.containsKey(user.id) || usersByLogin.containsKey(user.login)) {
             return null;
         }
-        users.put(newUser.id, newUser);
-        usersByLogin.put(newUser.login, newUser);
-        return newUser;
+        users.put(user.id, user);
+        usersByLogin.put(user.login, user);
+        return user;
     }
 
     @Override
@@ -63,5 +65,33 @@ public class InMemoryDataStore implements DataStore {
     @Override
     public List<Account> getAccountsBy(User user) {
         return accountsByUser.getOrDefault(user.id, Collections.<Account>emptyList());
+    }
+
+    @Override
+    public Account getAccount(UUID id) {
+        return accounts.get(id);
+    }
+
+    @Override
+    public List<Transaction> getTransactionsOn(Account account) {
+        return transactionsByAccount.getOrDefault(account.id, Collections.<Transaction>emptyList());
+    }
+
+    @Override
+    public void addTransactionToAccount(Account account, Transaction tx) {
+        List<Transaction> existing;
+        List<Transaction> modified;
+        do {
+            existing = transactionsByAccount.get(account.id);
+            if (existing == null) {
+                modified = Collections.singletonList(tx);
+            } else {
+                List<Transaction> copy = new ArrayList<>(existing);
+                copy.add(tx);
+                modified = Collections.unmodifiableList(copy);
+            }
+        } while ((existing == null)
+                    ? (transactionsByAccount.putIfAbsent(account.id, modified) != null)
+                    : !transactionsByAccount.replace(account.id, existing, modified));
     }
 }

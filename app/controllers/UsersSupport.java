@@ -23,7 +23,7 @@ public abstract class UsersSupport extends Controller {
             user = usersSupportDataStore.getUser(uuid);
         } catch (IllegalArgumentException iae) {
             if (!isValidLogin(uuidOrLogin)) {
-                return ModelResult.<User>fail(badRequest("Invalid login parameter"));
+                return ModelResult.<User>fail(badRequest("Invalid login"));
             }
             user = usersSupportDataStore.getUser(uuidOrLogin);
         }

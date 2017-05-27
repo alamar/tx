@@ -36,4 +36,10 @@ public class ModelResult<T> implements Iterable<T> {
                 ? Collections.singleton(payload.left.get()).iterator()
                 : Collections.<T>emptyIterator();
     }
+
+    public <Y> ModelResult<Y> cast() {
+        return payload.left.isPresent()
+                ? ModelResult.<Y>fail(Controller.internalServerError("Invalid cast"))
+                : ModelResult.<Y>fail(payload.right.get());
+    }
 }
