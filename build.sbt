@@ -10,3 +10,5 @@ scalaVersion := "2.11.11"
 libraryDependencies += filters
 
 libraryDependencies += "javax.mail" % "mail" % "1.4.7"
+
+testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-q", "-a")
