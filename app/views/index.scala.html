@@ -1,5 +1,75 @@
 @()
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("tx instance") {
+  <h1>Welcome to tx.</h1>
+
+  <div>Create User:</div>
+  <form action="/users" method="POST" target="create-user">
+    <tt>curl -X POST -d 'login=<input type="text" name="login" value="johndoe" size=15>' localhost:9000/users</tt>
+    <input type="submit">
+  </form>
+  <iframe name="create-user" src="about:blank" width="100%" height="40"></iframe>
+
+  <br>
+  <br>
+  <div>Create Account:</div>
+  <form action="/users/johndoe/accs" method="POST" target="create-account"
+      onsubmit="this.action = '/users/' + this.elements._login.value + '/accs';">
+    <tt>curl -X POST -d 'title=<input type="text" name="title" value="Main Account" size=15>' localhost:9000/users/<input type="text" name="_login" value="johndoe" size=15></tt>
+    <input type="submit">
+  </form>
+  <iframe name="create-account" src="about:blank" width="100%" height="40"></iframe>
+
+  <br>
+  <br>
+  <div>Add some funds from internal account (by account id):</div>
+  <form action="/users/johndoe/accs/0/txs" method="POST" target="add-internal"
+      onsubmit="this.action = '/users/' + this.elements._login.value + '/accs/' + this.elements._from.value + '/txs';">
+    <input type="hidden" name="source" value="internal">
+    <input type="hidden" name="to" value="00000000-0000-0000-c000-000000000046">
+    <tt>curl -X POST -d 'to=00000000-0000-0000-c000-000000000046&amount=<input type="text" name="amount" value="-10" size=6>' localhost:9000/users/<input type="text" name="_login" value="johndoe" size=15>/accs/<input type="text" name="_from" value="00000000-0000-0000-0000-000000000000" size=35>/txs</tt>
+    <input type="submit">
+  </form>
+  <iframe name="add-internal" src="about:blank" width="100%" height="40"></iframe>
+
+  <br>
+  <br>
+  <div>Move funds between accounts:</div>
+  <form action="/users/johndoe/accs/0/txs" method="POST" target="transfer"
+      onsubmit="this.action = '/users/' + this.elements._login.value + '/accs/' + this.elements._from.value + '/txs';">
+    <tt>curl -X POST -d 'to=<input type="text" name="to" value="00000000-0000-0000-0000-000000000000" size=35>&amount=<input type="text" name="amount" value="5" size=6>' localhost:9000/users/<input type="text" name="_login" value="johndoe" size=15>/accs/<input type="text" name="_from" value="00000000-0000-0000-0000-000000000000" size=35>/txs</tt>
+    <input type="submit">
+  </form>
+  <iframe name="transfer" src="about:blank" width="100%" height="40"></iframe>
+
+  <hr>
+  <div>Read user by login or id:</div>
+  <form action="/users/johndoe" method="GET" target="read-user"
+      onsubmit="this.action = '/users/' + this.elements._login.value;">
+    <tt>curl localhost:9000/users/<input type="text" name="_login" value="johndoe" size=15></tt>
+    <input type="submit">
+  </form>
+  <iframe name="read-user" src="about:blank" width="100%" height="40"></iframe>
+
+  <br>
+  <br>
+  <div>List user's accounts:</div>
+  <form action="/users/johndoe" method="GET" target="list-accounts"
+      onsubmit="this.action = '/users/' + this.elements._login.value + '/accs';">
+    <tt>curl localhost:9000/users/<input type="text" name="_login" value="johndoe" size=15>/accs</tt>
+    <input type="submit">
+  </form>
+  <iframe name="list-accounts" src="about:blank" width="100%" height="40"></iframe>
+
+  <br>
+  <br>
+  <div>List transactions for account:</div>
+  <form action="/users/johndoe" method="GET" target="list-transactions"
+      onsubmit="this.action = '/users/' + this.elements._login.value + '/accs/' + this.elements._acc.value + '/txs';">
+    <tt>curl localhost:9000/users/<input type="text" name="_login" value="johndoe" size=15>/accs/<input type="text" name="_acc" value="00000000-0000-0000-0000-000000000000" size=35>/txs</tt>
+    <input type="submit">
+  </form>
+  <iframe name="list-transactions" src="about:blank" width="100%" height="40"></iframe>
+
+  <div>Enjoy!</div>
 }
